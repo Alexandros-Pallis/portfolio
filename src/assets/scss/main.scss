@@ -1,0 +1,40 @@
+@import "../../node_modules/bulma/sass/_index.scss";
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url("../fonts/jetbrainsMono/JetBrainsMono-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url("../fonts/jetbrainsMono/JetBrainsMono-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url("../fonts/jetbrainsMono/JetBrainsMono-ExtraBold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 900;
+}
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.field:not(:last-child) {
+    margin-bottom: var(--bulma-block-spacing);
+}
+
+.container.dashboard {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}

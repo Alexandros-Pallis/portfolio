@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        - artifacts_folder=src
+      dockerfile: dev.Dockerfile
+    container_name: portfolio-admin
+    ports:
+      - "5001:80"
+    volumes:
+      - ./src:/usr/src/app
+    network_mode: bridge
+    environment:
+      - DB_HOST
+      - DB_NAME
+      - DB_PASSWORD
+      - DB_PORT
+      - DB_USERNAME
+      - GIN_MODE

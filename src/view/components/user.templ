@@ -1,0 +1,10 @@
+package components
+
+import "apallis/portfolio/model"
+
+templ User() {
+	<div class="is-flex is-align-items-center">
+		Hello { ctx.Value("user").(model.User).Username }
+		<a href="/logout" class="is-link is-white ml-4">Logout</a>
+	</div>
+}

@@ -1,0 +1,18 @@
+package layouts
+
+import "apallis/portfolio/view/components"
+
+templ Menu() {
+	<nav class="navbar p-5">
+		<div class="navbar-brand">
+			<div class="navbar-item has-text-weight-bold is-size-3">
+				Alexandros Pallis
+			</div>
+		</div>
+		<div class="navbar-end">
+			<div class="navbar-item">
+				@components.User()
+			</div>
+		</div>
+	</nav>
+}

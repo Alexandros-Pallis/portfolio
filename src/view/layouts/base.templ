@@ -1,0 +1,48 @@
+package layouts
+
+import "time"
+import "fmt"
+
+templ headerTemplate() {
+	<header></header>
+}
+
+templ navTemplate() {
+	<nav>
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/about">About</a></li>
+			<li><a href="/contact">Contact</a></li>
+		</ul>
+	</nav>
+}
+
+templ footerTemplate() {
+	<footer class="footer">
+		<div class="content has-text-centered">
+			<p>
+				Alexandros Pallis © { fmt.Sprintf("%d", time.Now().Year()) }
+			</p>
+		</div>
+	</footer>
+}
+
+templ Base(name string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ name }</title>
+			<link rel="stylesheet" href="/dist/css/main.css"/>
+			<script src="/dist/js/main.js" defer></script>
+		</head>
+		<body class="is-flex is-flex-direction-column">
+			@headerTemplate()
+			<main>
+				{ children... }
+			</main>
+		</body>
+		@footerTemplate()
+	</html>
+}
