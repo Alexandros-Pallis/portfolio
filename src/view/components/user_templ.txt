@@ -1,2 +1,0 @@
-<div class=\"is-flex is-align-items-center\">Hello 
- <a href=\"/logout\" class=\"is-link is-white ml-4\">Logout</a></div>

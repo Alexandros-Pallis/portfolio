@@ -1,4 +1,0 @@
-<p>Welcome to the dashboard 
-</p>
- <div class=\"dashboard container is-fluid\"><div class=\"columns\"><div class=\"column is-one-fifth\">
-</div><div class=\"column\"><div class=\"container content is-fullhd\">Content placeholder</div></div></div></div>

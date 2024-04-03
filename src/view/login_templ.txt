@@ -1,8 +1,0 @@
-<div class=\"notification is-danger\">
-</div>
-<div class=\"notification is-danger\"><button class=\"delete\"></button> 
-</div>
- <section class=\"hero is-large\"><div class=\"hero-body mx-auto\"><form action=\"/login\" method=\"post\" class=\"box\"><div class=\"field\"><label class=\"label\" for=\"username\">Username</label><div class=\"control\"><input class=\"input\" type=\"input\" id=\"username\" name=\"username\"
- value=\"
-\"
- required></div></div><div class=\"field\"><label class=\"label\" for=\"password\">Password</label><div class=\"control\"><input class=\"input\" type=\"password\" id=\"password\" name=\"password\" required></div></div><div class=\"field\"><div class=\"control\"><button type=\"submit\" class=\"button is-primary\">Login</button></div></div></form></div></section>
