@@ -4,6 +4,7 @@ import (
 	"apallis/portfolio/model"
 	"apallis/portfolio/renderer"
 	"apallis/portfolio/view"
+	"apallis/portfolio/view/pages"
 	"log"
 	"net/http"
 
@@ -11,19 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler struct{}
+type UserHandler struct{
+    Permissions []string `form:"permissions[][]"`
+}
 
-func (h *UserHandler) AuthRequiredMiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		authenticated := session.Get("authenticated")
-		if authenticated == nil {
-			c.Redirect(http.StatusFound, "/login")
-			c.Abort()
-			return
-		}
-		c.Next()
+func (h *UserHandler) Show(c *gin.Context) {
+	var user model.User
+	users, err := user.GetAll()
+	if err != nil {
+		log.Println("error getting users: ", err)
 	}
+	render := renderer.New(c, http.StatusOK, pages.ShowUserPage(users))
+	c.Render(http.StatusOK, render)
+	return
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
@@ -35,9 +36,39 @@ func (h *UserHandler) Login(c *gin.Context) {
 	if sessionUser != nil {
 		user = sessionUser.(model.User)
 	}
-	renderer := renderer.New(c, http.StatusOK, view.Login(&user, flashes))
-	c.Render(http.StatusOK, renderer)
+	render := renderer.New(c, http.StatusOK, view.Login(&user, flashes))
+	c.Render(http.StatusOK, render)
 	return
+}
+
+func (h *UserHandler) ManagePermissions(c *gin.Context) {
+    var user model.User
+    var permission model.Permission
+    users, err := user.GetAll()
+    if err != nil {
+        log.Println("error getting users: ", err)
+    }
+    permissions, err := permission.GetAll()
+    if err != nil {
+        log.Println("error getting permissions: ", err)
+    }
+    render := renderer.New(c, http.StatusOK, pages.ManagePermissionsPage(users, permissions))
+    c.Render(http.StatusOK, render)
+}
+
+func (h *UserHandler) AttemptManagePermissions(c *gin.Context) {
+    // TODO: figure out how to bind the permissions of multidimensional post array
+    // var permission model.Permission
+    var foo any
+    if err := c.ShouldBind(&foo); err != nil {
+        log.Println("error binding permission: ", err)
+    }
+    log.Println("permissions: ", foo)
+    c.JSON(http.StatusOK, gin.H{
+        "message": "success",
+        "permissions": foo,
+    })
+    // c.Redirect(http.StatusFound, "/manage-permissions")
 }
 
 func (h *UserHandler) AttemptLogin(c *gin.Context) {

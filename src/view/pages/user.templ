@@ -1,0 +1,17 @@
+package pages
+
+import "apallis/portfolio/view"
+import "apallis/portfolio/view/components"
+import "apallis/portfolio/model"
+
+templ ShowUserPage(users []model.User) {
+    @view.Dashboard(){
+        @components.ListUsers(users)
+    }
+}
+
+templ ManagePermissionsPage(users []model.User, permissions []model.Permission) {
+    @view.Dashboard(){
+        @components.UsersPermissionsForm(users, permissions)
+    }
+}

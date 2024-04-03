@@ -1,10 +1,75 @@
 package components
 
-import "apallis/portfolio/model"
+import (
+	"fmt"
 
-templ User() {
+	"apallis/portfolio/model"
+)
+
+templ GreetUser() {
 	<div class="is-flex is-align-items-center">
 		Hello { ctx.Value("user").(model.User).Username }
 		<a href="/logout" class="is-link is-white ml-4">Logout</a>
 	</div>
+}
+
+templ ListUsers(users []model.User) {
+	<table class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Permissions</th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, user := range users {
+				<tr>
+					<td>{ user.Username }</td>
+					<td>{ user.Email }</td>
+					<td>{ user.GetPermissionsAsString() }</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+templ UsersPermissionsForm(users []model.User, permissions []model.Permission) {
+	<form action="/users/permissions/manage" method="POST">
+		for _, user := range users {
+			<table class="table is-fullwidth">
+				<thead>
+					<tr>
+						<th>Username</th>
+						<th>Permissions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{ user.Username }</td>
+						<td class="">
+							<div class="columns">
+								for _, permission := range permissions {
+									<div class="column">
+										<label class="checkbox">
+											<input
+												type="checkbox"
+												name={ fmt.Sprintf("permissions[%d][]", user.ID) }
+												value={ fmt.Sprint(permission.Id) }
+												if user.HasPermission(permission.Name) {
+													checked
+												}
+											/>
+											{ fmt.Sprint(permission.Name) }
+										</label>
+									</div>
+								}
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		}
+        <button class="button is-primary" type="submit">Save</button>
+	</form>
 }

@@ -5,9 +5,16 @@ templ Sidebar() {
 		<p class="menu-label">
 			Dashboard
 		</p>
-        <ul class="menu-list">
-            <li><a href="/dashboard">Projects</a></li>
-            <li><a href="/images/index">Images</a></li>
-        </ul>
+		<ul class="menu-list">
+			<li>
+				<a href="/users/show">Users</a>
+				<ul>
+					<li><a href="/users/add">New User</a></li>
+					<li><a href="/users/permissions/manage">Manage Permissions</a></li>
+				</ul>
+			</li>
+			<li><a href="/dashboard">Projects</a></li>
+			<li><a href="/images/show">Images</a></li>
+		</ul>
 	</aside>
 }

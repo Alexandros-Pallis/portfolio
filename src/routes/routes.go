@@ -13,11 +13,16 @@ func Init(router *gin.Engine) {
 
 	// dashboard routes
 	dashboardHandler := handler.DashboardHandler{}
-	router.GET("/dashboard", dashboardHandler.Show)
+	router.GET("dashboard", dashboardHandler.Show)
+
+	userHandler := handler.UserHandler{}
+    // user routes
+    router.GET("users/show", userHandler.Show)
+    router.GET("users/permissions/manage", userHandler.ManagePermissions)
+    router.POST("users/permissions/manage", userHandler.AttemptManagePermissions)
 
 	// login routes
-	userHandler := handler.UserHandler{}
-	router.GET("/login", userHandler.Login)
-	router.GET("/logout", userHandler.Logout)
-	router.POST("/login", userHandler.AttemptLogin)
+	router.GET("login", userHandler.Login)
+	router.GET("logout", userHandler.Logout)
+	router.POST("login", userHandler.AttemptLogin)
 }
