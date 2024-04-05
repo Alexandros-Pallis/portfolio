@@ -2,7 +2,7 @@ package handler
 
 import (
 	"apallis/portfolio/renderer"
-	"apallis/portfolio/view"
+	"apallis/portfolio/view/pages"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +11,6 @@ import (
 type DashboardHandler struct{}
 
 func (h *DashboardHandler) Show(c *gin.Context) {
-	r := renderer.New(c, http.StatusOK, view.Dashboard())
+	r := renderer.New(c, http.StatusOK, pages.Dashboard("Dashboard"))
 	c.Render(http.StatusOK, r)
 }

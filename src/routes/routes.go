@@ -23,6 +23,10 @@ func Init(router *gin.Engine) {
 		router.GET("users/show", auth.WithPermission(model.Read), userHandler.Show)
 		router.GET("users/permissions/manage", auth.WithPermission(model.Read), userHandler.ManagePermissions)
 		router.POST("users/permissions/manage", auth.WithPermission(model.Delete), userHandler.AttemptManagePermissions)
+
+        // project routes
+        projectHandler := handler.ProjectHandler{}
+        router.GET("projects/add", auth.WithPermission(model.Write), projectHandler.Add)
 	}
 
 	// login routes

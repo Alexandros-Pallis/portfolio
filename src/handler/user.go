@@ -3,7 +3,6 @@ package handler
 import (
 	"apallis/portfolio/model"
 	"apallis/portfolio/renderer"
-	"apallis/portfolio/view"
 	"apallis/portfolio/view/pages"
 	"fmt"
 	"log"
@@ -41,7 +40,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	} else {
 		user = contenxtUser.(model.User)
 	}
-	render := renderer.New(c, http.StatusOK, view.Login(&user))
+	render := renderer.New(c, http.StatusOK, pages.Login(&user))
 	c.Render(http.StatusOK, render)
 	return
 }

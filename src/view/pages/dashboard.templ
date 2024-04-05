@@ -1,14 +1,15 @@
-package view
+package pages
 
 import "apallis/portfolio/view/layouts"
+import "apallis/portfolio/model"
 
-templ Dashboard() {
-	@layouts.Base("Dashboard") {
+templ Dashboard(name string) {
+	@layouts.Base(name + " | Alexandros Pallis Portfolio") {
 		@layouts.Menu()
 		<div class="dashboard container is-fluid">
 			<div class="columns">
 				<div class="column is-one-fifth">
-					@layouts.Sidebar()
+					@layouts.Sidebar(ctx.Value("user").(model.User))
 				</div>
 				<div class="column">
 					<div class="container content is-fullhd">

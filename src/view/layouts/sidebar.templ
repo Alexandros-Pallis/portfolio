@@ -1,7 +1,8 @@
 package layouts
 
-// TODO: conditionally show user menu items based on permissions
-templ Sidebar() {
+import "apallis/portfolio/model"
+
+templ Sidebar(user model.User) {
 	<aside class="menu">
 		<p class="menu-label">
 			Dashboard
@@ -10,11 +11,20 @@ templ Sidebar() {
 			<li>
 				<a href="/users/show">Users</a>
 				<ul>
-					<li><a href="/users/add">New User</a></li>
+					if user.HasPermission(model.Write) {
+						<li><a href="/users/add">New User</a></li>
+					}
 					<li><a href="/users/permissions/manage">Manage Permissions</a></li>
 				</ul>
 			</li>
-			<li><a href="/dashboard">Projects</a></li>
+			<li>
+				<a href="/dashboard">Projects</a>
+                <ul>
+                    if user.HasPermission(model.Write) {
+                        <li><a href="/projects/add">New Project</a></li>
+                    }
+                </ul>
+			</li>
 			<li><a href="/images/show">Images</a></li>
 		</ul>
 	</aside>

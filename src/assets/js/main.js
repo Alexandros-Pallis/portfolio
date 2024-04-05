@@ -7,3 +7,7 @@ document.querySelectorAll(".delete").forEach((el) => {
         el.closest("div").remove();
     });
 });
+
+import (/* webpackChunkName: "ckeditor" */ "./editor/ckeditor").then(({ default: ckeditor }) => {
+    ckeditor();
+});

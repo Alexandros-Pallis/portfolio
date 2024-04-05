@@ -1,0 +1,29 @@
+package pages
+
+templ AddProject() {
+	@Dashboard("Add Project") {
+		<h1>Add Project</h1>
+		<form method="POST">
+			<div class="field">
+				<div class="control">
+					<label class="label">title</label>
+					<input id="title" name="title" class="input" type="text"/>
+				</div>
+			</div>
+			<div class="field">
+				<div class="control">
+					<label class="label">url</label>
+					<input id="url" name="url" class="input" type="text"/>
+				</div>
+			</div>
+			<div class="field">
+				<div class="control">
+					<div id="editor"></div>
+				</div>
+			</div>
+			<div class="control">
+				<button type="button" class="button is-link">Submit</button>
+			</div>
+		</form>
+	}
+}

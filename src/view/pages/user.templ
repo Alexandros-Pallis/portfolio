@@ -1,23 +1,22 @@
 package pages
 
-import "apallis/portfolio/view"
 import "apallis/portfolio/view/components"
 import "apallis/portfolio/model"
 
 templ ShowUserPage(users []model.User) {
-    @view.Dashboard(){
+    @Dashboard("Show User"){
         @components.ListUsers(users)
     }
 }
 
 templ ManagePermissionsPage(users []model.User, permissions []model.Permission, currentUser model.User) {
-    @view.Dashboard(){
+    @Dashboard("Manage Permissions"){
         @components.UsersPermissionsForm(users, permissions, currentUser)
     }
 }
 
 templ AddUserPage() {
-    @view.Dashboard(){
+    @Dashboard("Add User"){
         <div>Add User Page</div>
     }
 }
