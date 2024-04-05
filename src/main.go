@@ -2,6 +2,7 @@ package main
 
 import (
 	"apallis/portfolio/database"
+	"apallis/portfolio/middleware"
 	"apallis/portfolio/migration"
 	"apallis/portfolio/model"
 	"apallis/portfolio/renderer"
@@ -28,7 +29,10 @@ func main() {
 	migration.Run(db)
 	store := gormsessions.NewStore(db, true, []byte("secret"))
 	router.Use(sessions.Sessions("session", store))
+    flashesMiddleware := middleware.FlashesMiddleware{}
+    router.Use(flashesMiddleware.WithSessionData())
     gob.Register(model.User{})
+    gob.Register(model.Flash{})
 	routes.Init(router)
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

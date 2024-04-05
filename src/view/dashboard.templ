@@ -1,11 +1,6 @@
 package view
 
-import "apallis/portfolio/model"
 import "apallis/portfolio/view/layouts"
-
-templ welcomeUser() {
-	<p>Welcome to the dashboard { ctx.Value("user").(model.User).Username }</p>
-}
 
 templ Dashboard() {
 	@layouts.Base("Dashboard") {

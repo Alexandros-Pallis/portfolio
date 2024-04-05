@@ -10,8 +10,14 @@ templ ShowUserPage(users []model.User) {
     }
 }
 
-templ ManagePermissionsPage(users []model.User, permissions []model.Permission) {
+templ ManagePermissionsPage(users []model.User, permissions []model.Permission, currentUser model.User) {
     @view.Dashboard(){
-        @components.UsersPermissionsForm(users, permissions)
+        @components.UsersPermissionsForm(users, permissions, currentUser)
+    }
+}
+
+templ AddUserPage() {
+    @view.Dashboard(){
+        <div>Add User Page</div>
     }
 }

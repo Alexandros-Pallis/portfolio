@@ -3,20 +3,9 @@ package view
 import "apallis/portfolio/model"
 import "apallis/portfolio/view/layouts"
 
-templ Flashes() {
-	for _, flash := range ctx.Value("flashes").([]string) {
-		<div class="notification is-danger">{ flash }</div>
-	}
-}
-
-templ Login(user *model.User, flashes []any) {
+templ Login(user *model.User) {
 	@layouts.Base("Login") {
-		for _, flash := range flashes {
-			<div class="notification is-danger">
-				<button class="delete"></button>
-				{ flash.(string) }
-			</div>
-		}
+        @layouts.Flashes()
 		<section class="hero is-large">
 			<div class="hero-body mx-auto">
 				<form action="/login" method="post" class="box">

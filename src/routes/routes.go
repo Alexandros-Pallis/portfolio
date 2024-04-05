@@ -3,26 +3,30 @@ package routes
 import (
 	"apallis/portfolio/handler"
 	"apallis/portfolio/middleware"
+	"apallis/portfolio/model"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Init(router *gin.Engine) {
-	authMiddleware := middleware.AuthMiddleware{}
-    router.Use(authMiddleware.AuthRequired())
-
+	auth := middleware.AuthMiddleware{}
 	// dashboard routes
 	dashboardHandler := handler.DashboardHandler{}
-	router.GET("dashboard", dashboardHandler.Show)
-
 	userHandler := handler.UserHandler{}
-    // user routes
-    router.GET("users/show", userHandler.Show)
-    router.GET("users/permissions/manage", userHandler.ManagePermissions)
-    router.POST("users/permissions/manage", userHandler.AttemptManagePermissions)
+	authorized := router.Group("/dashboard")
+	authorized.Use(auth.AuthRequired())
+	{
+		router.GET("dashboard", auth.AuthRequired(), dashboardHandler.Show)
+
+		// user routes
+		router.GET("users/add", auth.WithPermission(model.Write), userHandler.Add)
+		router.GET("users/show", auth.WithPermission(model.Read), userHandler.Show)
+		router.GET("users/permissions/manage", auth.WithPermission(model.Read), userHandler.ManagePermissions)
+		router.POST("users/permissions/manage", auth.WithPermission(model.Delete), userHandler.AttemptManagePermissions)
+	}
 
 	// login routes
-	router.GET("login", userHandler.Login)
-	router.GET("logout", userHandler.Logout)
-	router.POST("login", userHandler.AttemptLogin)
+	router.GET("login", auth.AuthNotRequired(), userHandler.Login)
+	router.GET("logout", auth.AuthRequired(), userHandler.Logout)
+	router.POST("login", auth.AuthNotRequired(), userHandler.AttemptLogin)
 }

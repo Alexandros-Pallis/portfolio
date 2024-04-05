@@ -4,6 +4,7 @@ import (
 	"apallis/portfolio/database"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -23,14 +24,14 @@ type Permission struct {
 }
 
 func (permission *Permission) GetById(id string) error {
-    result := database.DB.First(&permission, id)
-    return result.Error
+	result := database.DB.First(&permission, id)
+	return result.Error
 }
 
 func (permission *Permission) GetAll() ([]Permission, error) {
-    var permissions []Permission
-    result := database.DB.Find(&permissions)
-    return permissions, result.Error
+	var permissions []Permission
+	result := database.DB.Find(&permissions)
+	return permissions, result.Error
 }
 
 type User struct {
@@ -43,49 +44,68 @@ type User struct {
 }
 
 func (user *User) HasPermission(permissionType PermissionType) bool {
-    for _, permission := range user.Permissions {
-        if permission.Name == permissionType {
-            return true
-        }
-    }
-    return false
+	for _, permission := range user.Permissions {
+		if permission.Name == permissionType {
+			return true
+		}
+	}
+	return false
+}
+
+func (user *User) AddPermission(permission Permission) {
+	user.Permissions = append(user.Permissions, permission)
+}
+
+func (user *User) RemovePermissions() error {
+	return database.DB.Model(&user).Association("Permissions").Clear()
 }
 
 func (user *User) GetPermissionsAsString() string {
-    permissions := ""
-    for _, permission := range user.Permissions {
-        permissions += string(permission.Name) + ", "
+	permissions := ""
+	for _, permission := range user.Permissions {
+		permissions += string(permission.Name) + ", "
+	}
+	if len(permissions) == 0 {
+		permissions = "No permissions added yet..."
+	} else {
+        permissions = permissions[:len(permissions)-2]
     }
-    if len(permissions) == 0 {
-        permissions = "No permissions added yet..."
-    }
-    return permissions
+	return permissions
 }
 
 func (user *User) GetAll() ([]User, error) {
-    var users []User
-    result := database.DB.Find(&users)
-    return users, result.Error
+	var users []User
+	err := database.DB.Model(&User{}).Preload("Permissions").Find(&users).Error
+	return users, err
 }
 
-func GetUserByEmailAndPassword(email, password string) (User, error) {
-	// TODO: This need to compare the password
-	var user User
-	result := database.DB.Where("email = ? AND password = ?", email, password).First(&user)
-	return user, result.Error
+func (user *User) GetCurrentUser(contenxt *gin.Context) User {
+    var currentUser User
+    contextUser, ok := contenxt.Get("user")
+    if !ok {
+        return currentUser
+    }
+    currentUser = contextUser.(User)
+    return currentUser
 }
 
 func GetUserByUsernameAndPassword(username, password string) (User, error) {
 	var user User
-	result := database.DB.Where("username = ?", username).First(&user)
+    err := database.DB.Preload("Permissions").Where("username = ?", username).First(&user).Error
 	if !comparePassword(user.Password, password) {
 		user = User{}
 		return user, fmt.Errorf("Invalid password")
 	}
-	return user, result.Error
+	return user, err
 }
 
 func comparePassword(hashedPassword, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	return err == nil
+}
+
+func (user *User) Save() error {
+	fmt.Println("user perms: ", user.GetPermissionsAsString())
+	result := database.DB.Save(user)
+	return result.Error
 }

@@ -1,4 +1,5 @@
 .env
+src/main
 src/dist
 src/node_modules
 src/view/**/*.go

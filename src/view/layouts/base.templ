@@ -2,9 +2,33 @@ package layouts
 
 import "time"
 import "fmt"
+import "apallis/portfolio/model"
 
 templ headerTemplate() {
 	<header></header>
+}
+
+templ Flashes() {
+	for _, flash := range ctx.Value("flashes").([]model.Flash) {
+		if flash.Type == "success" {
+			<div class="notification is-success">
+				<button class="delete"></button>
+				{ flash.Message }
+			</div>
+		}
+		if flash.Type == "info" {
+			<div class="notification is-info">
+				<button class="delete"></button>
+				{ flash.Message }
+			</div>
+		}
+		if flash.Type == "error" {
+			<div class="notification is-danger">
+				<button class="delete"></button>
+				{ flash.Message }
+			</div>
+		}
+	}
 }
 
 templ navTemplate() {
@@ -38,6 +62,7 @@ templ Base(name string) {
 			<script src="/dist/js/main.js" defer></script>
 		</head>
 		<body class="is-flex is-flex-direction-column">
+			@Flashes()
 			@headerTemplate()
 			<main>
 				{ children... }

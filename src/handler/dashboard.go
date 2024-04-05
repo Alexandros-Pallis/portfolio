@@ -11,6 +11,6 @@ import (
 type DashboardHandler struct{}
 
 func (h *DashboardHandler) Show(c *gin.Context) {
-    r := renderer.New(c, http.StatusOK, view.Dashboard())
-    c.Render(http.StatusOK, r)
+	r := renderer.New(c, http.StatusOK, view.Dashboard())
+	c.Render(http.StatusOK, r)
 }

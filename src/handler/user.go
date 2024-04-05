@@ -5,6 +5,7 @@ import (
 	"apallis/portfolio/renderer"
 	"apallis/portfolio/view"
 	"apallis/portfolio/view/pages"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,8 +13,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler struct{
-    Permissions []string `form:"permissions[][]"`
+type UserHandler struct {
+}
+
+func (h *UserHandler) Add(c *gin.Context) {
+	render := renderer.New(c, http.StatusOK, pages.AddUserPage())
+	c.Render(http.StatusOK, render)
+	return
 }
 
 func (h *UserHandler) Show(c *gin.Context) {
@@ -28,47 +34,78 @@ func (h *UserHandler) Show(c *gin.Context) {
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
-	user := model.User{}
-	session := sessions.Default(c)
-	flashes := session.Flashes()
-	sessionUser := session.Get("user")
-	session.Save()
-	if sessionUser != nil {
-		user = sessionUser.(model.User)
+	var user model.User
+	contenxtUser, ok := c.Get("user")
+	if !ok {
+		user = model.User{}
+	} else {
+		user = contenxtUser.(model.User)
 	}
-	render := renderer.New(c, http.StatusOK, view.Login(&user, flashes))
+	render := renderer.New(c, http.StatusOK, view.Login(&user))
 	c.Render(http.StatusOK, render)
 	return
 }
 
 func (h *UserHandler) ManagePermissions(c *gin.Context) {
-    var user model.User
-    var permission model.Permission
-    users, err := user.GetAll()
-    if err != nil {
-        log.Println("error getting users: ", err)
-    }
-    permissions, err := permission.GetAll()
-    if err != nil {
-        log.Println("error getting permissions: ", err)
-    }
-    render := renderer.New(c, http.StatusOK, pages.ManagePermissionsPage(users, permissions))
-    c.Render(http.StatusOK, render)
+	var user model.User
+	var permission model.Permission
+	users, err := user.GetAll()
+	if err != nil {
+		log.Println("error getting users: ", err)
+	}
+	permissions, err := permission.GetAll()
+	if err != nil {
+		log.Println("error getting permissions: ", err)
+	}
+	render := renderer.New(c, http.StatusOK, pages.ManagePermissionsPage(users, permissions, user.GetCurrentUser(c)))
+	c.Render(http.StatusOK, render)
 }
 
 func (h *UserHandler) AttemptManagePermissions(c *gin.Context) {
-    // TODO: figure out how to bind the permissions of multidimensional post array
-    // var permission model.Permission
-    var foo any
-    if err := c.ShouldBind(&foo); err != nil {
-        log.Println("error binding permission: ", err)
-    }
-    log.Println("permissions: ", foo)
-    c.JSON(http.StatusOK, gin.H{
-        "message": "success",
-        "permissions": foo,
-    })
-    // c.Redirect(http.StatusFound, "/manage-permissions")
+	var user model.User
+	session := sessions.Default(c)
+	users, err := user.GetAll()
+	if err != nil {
+		session.AddFlash(model.NewFlash(err.Error(), "error"))
+		session.Save()
+		c.Redirect(http.StatusFound, "/users/permissions/manage")
+		return
+	}
+	c.Request.ParseForm()
+	form := c.Request.PostForm
+	for _, user := range users {
+		key := fmt.Sprintf("permissions[%d]", user.Id)
+		permissions, ok := form[key]
+		if !ok {
+			continue
+		}
+        if err := user.RemovePermissions(); err != nil {
+            session.AddFlash(model.NewFlash(err.Error(), "error"))
+            session.Save()
+            c.Redirect(http.StatusFound, "/users/permissions/manage")
+            return
+        }
+		for _, permissionId := range permissions {
+			var permission model.Permission
+			if err := permission.GetById(permissionId); err != nil {
+				session.AddFlash(model.NewFlash(err.Error(), "error"))
+				continue
+			}
+			user.AddPermission(permission)
+		}
+		if err := user.Save(); err != nil {
+			session.AddFlash(model.NewFlash(err.Error(), "error"))
+			session.Save()
+			c.Redirect(http.StatusFound, "/users/permissions/manage")
+			return
+		}
+        if user.Id == user.GetCurrentUser(c).Id {
+            session.Set("user", user)
+        }
+	}
+	session.AddFlash(model.NewFlash("Permissions updated successfully", "success"))
+	session.Save()
+	c.Redirect(http.StatusFound, "/users/permissions/manage")
 }
 
 func (h *UserHandler) AttemptLogin(c *gin.Context) {

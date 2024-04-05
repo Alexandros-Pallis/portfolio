@@ -34,7 +34,7 @@ templ ListUsers(users []model.User) {
 	</table>
 }
 
-templ UsersPermissionsForm(users []model.User, permissions []model.Permission) {
+templ UsersPermissionsForm(users []model.User, permissions []model.Permission, currentUser model.User) {
 	<form action="/users/permissions/manage" method="POST">
 		for _, user := range users {
 			<table class="table is-fullwidth">
@@ -54,11 +54,10 @@ templ UsersPermissionsForm(users []model.User, permissions []model.Permission) {
 										<label class="checkbox">
 											<input
 												type="checkbox"
-												name={ fmt.Sprintf("permissions[%d][]", user.ID) }
+												name={ fmt.Sprintf("permissions[%d]", user.Id) }
 												value={ fmt.Sprint(permission.Id) }
-												if user.HasPermission(permission.Name) {
-													checked
-												}
+												checked?={ user.HasPermission(permission.Name) }
+                                                disabled?={ !currentUser.HasPermission(model.Delete) }
 											/>
 											{ fmt.Sprint(permission.Name) }
 										</label>
@@ -70,6 +69,6 @@ templ UsersPermissionsForm(users []model.User, permissions []model.Permission) {
 				</tbody>
 			</table>
 		}
-        <button class="button is-primary" type="submit">Save</button>
+		<button class="button is-primary" type="submit">Save</button>
 	</form>
 }
