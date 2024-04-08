@@ -28,6 +28,13 @@ func Init(router *gin.Engine) {
         projectHandler := handler.ProjectHandler{}
         router.GET("projects/add", auth.WithPermission(model.Write), projectHandler.Add)
         router.POST("projects/add", auth.WithPermission(model.Write), projectHandler.AttempAdd)
+
+        // images
+        imageHandler := handler.ImageHandler{}
+        router.GET("images/show", auth.WithPermission(model.Read), imageHandler.Show)
+
+        // upload
+        router.POST("images/upload", auth.WithPermission(model.Write), imageHandler.Upload)
 	}
 
 	// login routes

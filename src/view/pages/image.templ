@@ -1,0 +1,13 @@
+package pages
+
+import "apallis/portfolio/view/components"
+
+templ ShowImages() {
+	@Dashboard("Images") {
+		<div>Images</div>
+		<form method="POST" enctype="multipart/form-data" action="/images/upload">
+			@components.UploadFile("image", "")
+			@components.Submit("Upload")
+		</form>
+	}
+}
