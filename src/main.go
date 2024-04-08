@@ -25,7 +25,7 @@ func main() {
     }
 	router.SetTrustedProxies(nil)
 	router.Static("/dist", "./dist")
-    router.Static("/image", "./image")
+    router.Static("/image", "./writable/images")
 	db := database.Init()
 	migration.Run(db)
 	store := gormsessions.NewStore(db, true, []byte("secret"))

@@ -26,6 +26,6 @@ func (h *ImageHandler) Upload(c *gin.Context) {
         return
     }
     log.Println(file.Filename)
-    c.SaveUploadedFile(file, "image/" + file.Filename)
+    c.SaveUploadedFile(file, "writable/images/" + file.Filename)
     c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }
