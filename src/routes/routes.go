@@ -27,6 +27,7 @@ func Init(router *gin.Engine) {
         // project routes
         projectHandler := handler.ProjectHandler{}
         router.GET("projects/add", auth.WithPermission(model.Write), projectHandler.Add)
+        router.POST("projects/add", auth.WithPermission(model.Write), projectHandler.AttempAdd)
 	}
 
 	// login routes

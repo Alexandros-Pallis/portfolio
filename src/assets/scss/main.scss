@@ -1,4 +1,4 @@
-@import "../../node_modules/bulma/sass/_index.scss";
+@use '../../node_modules/bulma/sass/index';
 
 @font-face {
     font-family: 'JetBrains Mono';
@@ -37,4 +37,8 @@ footer {
 .container.dashboard {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+}
+
+#editor {
+    height: 200px;
 }

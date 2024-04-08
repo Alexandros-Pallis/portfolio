@@ -14,14 +14,11 @@
         "autoprefixer": "^10.4.19",
         "bulma": "^1.0.0",
         "css-loader": "^6.10.0",
-        "htmx.org": "^1.9.11",
         "mini-css-extract-plugin": "^2.8.1",
         "postcss-loader": "^8.1.1",
+        "quill": "^2.0.0-rc.5",
         "sass-loader": "^14.1.1",
         "webpack": "^5.91.0",
         "webpack-cli": "^5.1.4"
-    },
-    "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^41.2.1"
     }
 }
