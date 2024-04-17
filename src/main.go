@@ -17,23 +17,23 @@ import (
 
 func main() {
 	router := gin.New()
-    router.Use(gin.Logger())
-    router.Use(gin.Recovery())
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 	ginHTMLRenderer := router.HTMLRender
 	router.HTMLRender = &renderer.HTMLTemplRenderer{
 		FallbackHtmlRenderer: ginHTMLRenderer,
-    }
+	}
 	router.SetTrustedProxies(nil)
 	router.Static("/dist", "./dist")
-    router.Static("/image", "./writable/images")
+	router.Static("/image", "./writable/images")
 	db := database.Init()
 	migration.Run(db)
 	store := gormsessions.NewStore(db, true, []byte("secret"))
 	router.Use(sessions.Sessions("session", store))
-    flashesMiddleware := middleware.FlashesMiddleware{}
-    router.Use(flashesMiddleware.WithSessionData())
-    gob.Register(model.User{})
-    gob.Register(model.Flash{})
+	flashesMiddleware := middleware.FlashesMiddleware{}
+	router.Use(flashesMiddleware.WithSessionData())
+	gob.Register(model.User{})
+	gob.Register(model.Flash{})
 	routes.Init(router)
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
